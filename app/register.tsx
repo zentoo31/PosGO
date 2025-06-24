@@ -24,7 +24,7 @@ export default function register() {
                 <Feather name="lock" size={24} color="gray" />
                 <TextInput className='w-full h-full px-5' placeholder='**********' ></TextInput>
             </View>
-            <Link href={"/register"} asChild>
+            <Link href={"/home"} asChild>
                 <Pressable className='bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5' >
                     <Text className='text-white'>Sign up</Text>
                 </Pressable>
