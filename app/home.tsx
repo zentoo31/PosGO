@@ -1,24 +1,63 @@
+import RegisterProd from '@/components/registerProd';
 import Searcher from '@/components/searcher';
 import Feather from '@expo/vector-icons/Feather';
-import React from 'react';
-import { Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, StatusBar, Text, View } from 'react-native';
 
-const home = () => {
+const Home = () => {
+  const [addition, setAddition] = useState<number>(0);
+
+  const getAdditionValue = async () => {
+    const stored = await AsyncStorage.getItem('addition');
+    const items = stored ? JSON.parse(stored) : [];
+    const total = items.reduce((sum: number, item: { price: number }) => sum + item.price, 0);
+    setAddition(total);
+  };
+
+  useEffect(() => {
+    getAdditionValue();
+  }, []);
+
   return (
-    <View className='flex-1 pt-9 pb-7 bg-[#16429E]' >
-        <View className='flex-row items-start p-2'>
-            <Feather name="shopping-bag" size={24} color="white"/>
-            <Text className='text-2xl font-bold text-white ml-2'>PosGo</Text>
-        </View>
-        <View className='bg-[#F9FAFB] p-10 h-full'>
-            <Text className='font-bold text-2xl'>Point of Sale</Text>
-            <View className='shadow-lg border-[0.5px] border-gray-300 rounded-md bg-white'>
-                <Searcher/>
+    <SafeAreaView className='flex-1 bg-[#16429E]'>
+      <StatusBar backgroundColor="#16429E" barStyle="light-content" translucent />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className='flex-1'
+      >
+        <View
+          style={{
+            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+          }}
+        >
+          <View className='flex-row items-center justify-between px-4 py-3'>
+            <View className='flex-row items-center'>
+              <Feather name="shopping-bag" size={24} color="white" />
+              <Text className='text-2xl font-bold text-white ml-2'>PosGo</Text>
             </View>
+            <Link href="/cart" asChild>
+              <Pressable className='flex-row items-center gap-2'>
+                <Feather name="shopping-cart" size={24} color="white" />
+                <Text className='text-white text-lg mr-2'>
+                  S/. {addition.toFixed(2)}
+                </Text>
+              </Pressable>
+            </Link>
+          </View>
         </View>
-    </View>
-  )
-}
 
+        <View className='bg-[#F9FAFB] px-4 pt-6 flex-1 '>
+          <Text className='font-bold text-2xl mb-4'>Punto de venta</Text>
+          <View className='shadow-lg border-[0.5px] border-gray-300 rounded-md bg-white flex-1'>
+            <RegisterProd />
+            <Searcher onAddItem={getAdditionValue}/>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
 
-export default home
+export default Home;
