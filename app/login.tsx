@@ -9,24 +9,24 @@ const login = () => {
             <Feather name="shopping-bag" size={48} color="black" />
             <Text className='text-4xl font-bold'>PosGo</Text>
         </View>
-        <Text>Welcome back! Sign in to your account</Text>
+        <Text>Bienvenido! Inicia sesión con tu cuenta</Text>
         <View className='flex-col items-center gap-5 mt-10'>
-            <Text className='text-2xl font-extrabold'>Sign in</Text>
+            <Text className='text-2xl font-extrabold'>Iniciar sesión</Text>
             <View className='gap-2'>
-                <Text className='text-gray-700 font-bold'>Email</Text>
+                <Text className='text-gray-700 font-bold'>Correo</Text>
             <View className='bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border-gray-500 border-[1px]'>
                 <Feather name="user" size={24} color="gray" />
                 <Text className='text-gray-500'></Text>
                 <TextInput className='w-full h-full px-5' placeholder='you@example.com'></TextInput>
             </View>
-            <Text className='text-gray-700 font-bold'>Password</Text>
+            <Text className='text-gray-700 font-bold'>Contraseña</Text>
             <View className='bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border-gray-500 border-[1px]'>
                 <Feather name="lock" size={24} color="gray" />
                 <TextInput className='w-full h-full px-5' placeholder='**********' ></TextInput>
             </View>
             <Link href={"/register"} asChild>
                 <Pressable className='bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5' >
-                    <Text className='text-white'>Sign in</Text>
+                    <Text className='text-white'>Entrar</Text>
                 </Pressable>
             </Link>
             </View>
