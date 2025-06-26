@@ -1,15 +1,16 @@
 import Feather from '@expo/vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import {
-    FlatList,
-    Image,
-    Pressable,
-    Text,
-    TextInput,
-    View
+  FlatList,
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  View
 } from 'react-native';
 
-export default function Searcher() {
+export default function Searcher({ onAddItem}: {onAddItem: () => void}) {
   const [busqueda, setBusqueda] = useState('');
   const [datos] = useState([
     { id: '1', nombre: 'Manzana', pic: 'https://www.recetasnestle.com.pe/sites/default/files/2022-07/tipos-de-manzana-royal-gala.jpg', price: 1.2, category: 'Frutas', stock:10 },
@@ -24,6 +25,22 @@ export default function Searcher() {
     item.nombre.toLowerCase().includes(busqueda.toLowerCase())
   );
 
+  const addAddition = async (price: number, nombre: string) => {
+  try {
+    const current = await AsyncStorage.getItem('addition');
+    const currentArray = current ? JSON.parse(current) : [];
+
+    const newItem = { price, nombre };
+    const newArray = [...currentArray, newItem];
+
+    await AsyncStorage.setItem('addition', JSON.stringify(newArray));
+    onAddItem?.();
+  } catch (error) {
+    console.error('Error al actualizar "addition":', error);
+  }
+};
+  
+
   const renderItem = ({ item }: { item: { id: string; nombre: string, pic: string; price: number, category: string, stock:number} }) => (
     <View className='flex-1 m-1 flex-col border-[0.5px] border-gray-300 rounded-lg'>
         <Image source={{uri: item.pic}} className='w-full h-32'/>
@@ -31,22 +48,26 @@ export default function Searcher() {
             <Text className="text-base mt-2">{item.nombre}</Text>
             <Text className='text-gray-300 text-sm'>{item.category}</Text>
             <View className='flex-row justify-between items-center mt-2'>
-                <Text className='text-lg font-bold'>${item.price.toFixed(2)}</Text>
+                <Text className='text-lg font-bold'>S/. {item.price.toFixed(2)}</Text>
                 <Text className='text-sm text-gray-500'>Stock: {item.stock}</Text>
             </View>
-            <Pressable className='bg-blue-500 rounded-md p-2 mt-2 flex-row items-center justify-center'>
+            <Pressable className='bg-blue-500 rounded-md p-2 mt-2 flex-row items-center justify-center gap-2' 
+                onPress={() => {
+                    addAddition(item.price, item.nombre);
+                }}
+            >
                 <Feather name="shopping-cart" size={20} color="white" className='ml-3'/>
-                <Text className='text-white text-center'>Agregar al carrito</Text>
+                <Text className='text-white text-center'>Agregar</Text>
             </Pressable>
         </View>
     </View>
   );
 
   return (
-    <View className="p-4 bg-white rounded-lg">
+    <View className="p-4 bg-white rounded-lg flex-1">
       <TextInput
-        className="bg-gray-100 px-4 py-3 rounded-lg mb-4"
-        placeholder="Search products..."
+        className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300"
+        placeholder="Buscar productos..."
         value={busqueda}
         onChangeText={setBusqueda}
       />
