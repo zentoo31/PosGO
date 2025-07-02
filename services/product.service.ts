@@ -23,4 +23,25 @@ export class ProductService {
         }
     }
 
+    async createProduct(product: Product): Promise<Product> {
+        try {
+            const response = await fetch(`${this.baseUrl}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error creating product: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to create product:', error);
+            throw error;
+        }
+    }
+
 }
