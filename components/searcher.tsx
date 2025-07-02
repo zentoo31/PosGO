@@ -1,6 +1,8 @@
+import { Product } from '@/interfaces/product';
+import { ProductService } from '@/services/product.service';
 import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -11,6 +13,7 @@ import {
 } from 'react-native';
 
 export default function Searcher({ onAddItem}: {onAddItem: () => void}) {
+  const productService = new ProductService();
   const [busqueda, setBusqueda] = useState('');
   const [datos] = useState([
     { id: '1', nombre: 'Manzana', pic: 'https://www.recetasnestle.com.pe/sites/default/files/2022-07/tipos-de-manzana-royal-gala.jpg', price: 1.2, category: 'Frutas', stock:10 },
@@ -20,6 +23,21 @@ export default function Searcher({ onAddItem}: {onAddItem: () => void}) {
     { id: '5', nombre: 'Carne Molida', pic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnwhclycPN_bAZSaZ8lbHDF3eFEb7Jlvo8RA&s', price: 3.0, category: 'Carnes', stock:10 },
     { id: '6', nombre: 'Arroz', pic: 'https://www.allrecipes.com/thmb/RKpnSHLUDT2klppYgx8jAF47GyM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/52490-PuertoRicanSteamedRice-DDMFS-061-4x3-3c3da714aa614037ad1c135ec303526d.jpg', price: 0.8, category: 'Granos', stock:10 }
   ]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchProducts = async () => {
+    try {
+      const fetchedProducts = await productService.getAllProducts();
+      setProducts(fetchedProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
 
   const datosFiltrados = datos.filter(item =>
     item.nombre.toLowerCase().includes(busqueda.toLowerCase())
@@ -73,7 +91,14 @@ export default function Searcher({ onAddItem}: {onAddItem: () => void}) {
       />
 
       <FlatList
-        data={datosFiltrados}
+        data={products.map((item) => ({
+          id: String(item.id),
+          nombre: item.name ?? '',
+          pic: item.imageUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+          price: item.price ?? 0,
+          category: item.category ?? '',
+          stock: item.stock ?? 0,
+        }))}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={{ gap: 8, paddingHorizontal: 8 }} 
