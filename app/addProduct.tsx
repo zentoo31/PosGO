@@ -1,3 +1,4 @@
+import { navigate } from 'expo-router/build/global-state/routing';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -41,7 +42,7 @@ const addProduct = () => {
   });
 
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<{id: number, name: string} | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<{ id: number, name: string } | null>(null);
 
   const handleInputChange = (field: keyof ProductData, value: string) => {
     setFormData(prev => ({
@@ -50,7 +51,7 @@ const addProduct = () => {
     }));
   };
 
-  const handleCategorySelect = (category: {id: number, name: string}) => {
+  const handleCategorySelect = (category: { id: number, name: string }) => {
     setSelectedCategory(category);
     setFormData(prev => ({
       ...prev,
@@ -106,9 +107,9 @@ const addProduct = () => {
 
       // Aquí harías la llamada a tu API
       console.log('Producto a enviar:', productData);
-      
+
       Alert.alert(
-        'Éxito', 
+        'Éxito',
         'Producto agregado correctamente',
         [
           {
@@ -144,16 +145,25 @@ const addProduct = () => {
           style={{
             paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}>
-          
-          {/* Header */}
-          <View className='flex-row items-center justify-center px-4 py-3'>
-            <Text className='text-2xl font-bold text-white'>Agregar producto</Text>
+
+          <View className='flex-row items-center justify-between px-4 py-3'>
+            <TouchableOpacity
+              onPress={() => {
+                navigate('..');
+              }}
+              className='pr-4'
+              accessibilityLabel="Volver"
+            >
+              <Text className='text-white text-lg font-bold'>{'< Volver'}</Text>
+            </TouchableOpacity>
+            <Text className='text-2xl font-bold text-white flex-1 text-center'>Agregar producto</Text>
+            <View style={{ width: 60 }} />
           </View>
 
           {/* Form Container */}
-          <View className=' bg-gray-50 mt-4 rounded-t-3xl'>
+          <View className=' bg-gray-50 mt-4 h-full'>
             <ScrollView className=' px-4 pt-6' showsVerticalScrollIndicator={false}>
-              
+
               {/* Product Name */}
               <View className='mb-4'>
                 <Text className='text-gray-700 font-semibold mb-2'>Nombre del producto</Text>
@@ -218,7 +228,7 @@ const addProduct = () => {
                     {selectedCategory ? selectedCategory.name : 'Seleccionar categoría'}
                   </Text>
                 </TouchableOpacity>
-                
+
                 {showCategoryDropdown && (
                   <View className='bg-white border border-gray-200 rounded-lg mt-1 overflow-hidden'>
                     {categories.map((category) => (
