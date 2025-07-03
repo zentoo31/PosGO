@@ -26,12 +26,12 @@ const login = () => {
   });
 
   const storeTokens = async (accessToken: string, refreshToken: string) => {
-    try{
+    try {
       await AsyncStorage.multiSet([
         ['@access_token', accessToken],
         ['@refresh_token', refreshToken]
       ])
-    }catch (error) {
+    } catch (error) {
       console.error('Error storing tokens:', error);
     }
   }
@@ -80,6 +80,7 @@ const login = () => {
                     className="w-full h-full px-5"
                     placeholder="you@example.com"
                     keyboardType="email-address"
+                    placeholderTextColor={'gray'}
                     autoCapitalize="none"
                     onChangeText={(text) => setLoginData({ ...loginData, email: text })}
                   />
@@ -90,17 +91,18 @@ const login = () => {
                   <TextInput
                     className="w-full h-full px-5"
                     placeholder="**********"
+                    placeholderTextColor={'gray'}
                     secureTextEntry
                     onChange={(text) => setLoginData({ ...loginData, password: text.nativeEvent.text })}
                   />
                 </View>
-                  <TouchableOpacity className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5"
-                    onPress={handleLogin}
-                    disabled={isLoading}
-                    activeOpacity={0.7}
-                  >
-                    <Text className="text-white">Entrar</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5"
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                  activeOpacity={0.7}
+                >
+                  <Text className="text-white">Entrar</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
