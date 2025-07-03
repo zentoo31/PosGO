@@ -94,6 +94,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
       <TextInput
         className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300"
         placeholder="Buscar productos..."
+        placeholderTextColor={'gray'}
         value={busqueda}
         onChangeText={setBusqueda}
       />
