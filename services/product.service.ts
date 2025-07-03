@@ -1,4 +1,4 @@
-import { CreateProduct } from "@/dto/createProduct";
+import { CreateProduct } from "@/dto/createProductDto";
 import { Product } from "@/models/product";
 import Constants from 'expo-constants';
 
