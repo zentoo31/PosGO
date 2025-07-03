@@ -7,7 +7,7 @@ export class AuthService {
     private apiUrl: string = Constants.expoConfig?.extra?.apiUrl;
     private baseUrl: string = `${this.apiUrl}/auth`;
 
-    async register(registerDto: RegisterDto): Promise<User> {
+    async register(registerDto: RegisterDto){
         const response = await fetch(`${this.baseUrl}/register`, {
             method: "POST",
             headers: {
