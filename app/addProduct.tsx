@@ -19,8 +19,6 @@ import {
   View
 } from 'react-native';
 
-
-
 const AddProduct = () => {
 
   const categoryService = new CategoryService();
