@@ -7,27 +7,32 @@ import { ActivityIndicator, View } from "react-native";
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
+  const [hasAccessToken, setHasAccessToken] = useState(false);
 
   useEffect(() => {
-    const checkWelcomePage = async () => {
+    const checkAuthAndWelcome = async () => {
       try {
-        const seen = await AsyncStorage.getItem("hasSeenWelcome");
-        if (seen) {
-          setHasSeenWelcome(true);
-        }
+        // Verificar el welcome y el token de acceso
+        const [seen, accessToken] = await Promise.all([
+          AsyncStorage.getItem("hasSeenWelcome"),
+          AsyncStorage.getItem("@access_token")
+        ]);
+        
+        setHasSeenWelcome(!!seen);
+        setHasAccessToken(!!accessToken);
       } catch (error) {
-        console.error("Error checking welcome page:", error);
+        console.error("Error checking auth state:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    checkWelcomePage();
+    checkAuthAndWelcome();
   }, []);
 
   const handleWelcomeComplete = async (): Promise<void> => {
     try {
-      await AsyncStorage.setItem('hasSeenWelcome', JSON.stringify(true));
+      await AsyncStorage.setItem('hasSeenWelcome', 'true');
       setHasSeenWelcome(true);
     } catch (error) {
       console.error('Error saving to AsyncStorage:', error);
@@ -42,9 +47,15 @@ export default function Index() {
     );
   }
 
-  return hasSeenWelcome ? (
-    <Redirect href={'/login'}/>
-  ): (
-    <WelcomePage onComplete={handleWelcomeComplete} />
-  )
+  // Lógica de redirección priorizada
+  if (!hasSeenWelcome) {
+    return <WelcomePage onComplete={handleWelcomeComplete} />;
+  }
+
+  // Si ya vió el welcome, redirigir según tenga token o no
+  return hasAccessToken ? (
+    <Redirect href="/home" />
+  ) : (
+    <Redirect href="/login" />
+  );
 }
