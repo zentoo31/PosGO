@@ -1,6 +1,8 @@
-import { navigate } from 'expo-router/build/global-state/routing';
+import { ProductService } from '@/services/product.service';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Image,
   KeyboardAvoidingView,
@@ -18,7 +20,7 @@ interface ProductData {
   name: string;
   description: string;
   price: string;
-  category: string;
+  category: number;
   stock: string;
   imageUrl: string;
 }
@@ -31,18 +33,20 @@ const categories = [
   { id: 5, name: 'Otros' }
 ];
 
-const addProduct = () => {
+const AddProduct = () => {
   const [formData, setFormData] = useState<ProductData>({
     name: '',
     description: '',
     price: '',
-    category: '',
+    category: 0,
     stock: '',
     imageUrl: ''
   });
 
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<{ id: number, name: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const productService = new ProductService();
 
   const handleInputChange = (field: keyof ProductData, value: string) => {
     setFormData(prev => ({
@@ -55,7 +59,7 @@ const addProduct = () => {
     setSelectedCategory(category);
     setFormData(prev => ({
       ...prev,
-      category: category.id.toString()
+      category: category.id
     }));
     setShowCategoryDropdown(false);
   };
@@ -95,43 +99,62 @@ const addProduct = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    setIsLoading(true);
+
     try {
       const productData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: Number(formData.price),
-        category: Number(formData.category),
+        category: formData.category, // Enviar como string o número según lo que espere tu backend
         stock: Number(formData.stock),
         imageUrl: formData.imageUrl.trim() || undefined
       };
+      console.log('Datos del producto a enviar:', productData);
+      
 
-      // Aquí harías la llamada a tu API
-      console.log('Producto a enviar:', productData);
+      // Llamada al servicio para crear el producto
+      const createdProduct = await productService.createProduct({
+        id: 0, // El backend probablemente ignora esto o lo reemplaza
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        category: productData.category, 
+        stock: productData.stock,
+        imageUrl: productData.imageUrl
+      });
 
       Alert.alert(
         'Éxito',
-        'Producto agregado correctamente',
+        `Producto "${productData.name}" creado correctamente`,
         [
           {
             text: 'OK',
             onPress: () => {
-              // Reset form
-              setFormData({
-                name: '',
-                description: '',
-                price: '',
-                category: '',
-                stock: '',
-                imageUrl: ''
-              });
-              setSelectedCategory(null);
+              resetForm();
+              router.back(); // Opcional: volver atrás después de crear
             }
           }
         ]
       );
     } catch (error) {
-      Alert.alert('Error', 'No se pudo agregar el producto');
+      console.error('Error al crear producto:', error);
+      Alert.alert('Error', 'No se pudo agregar el producto. Por favor, intente nuevamente.');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      price: '',
+      category: 0,
+      stock: '',
+      imageUrl: ''
+    });
+    setSelectedCategory(null);
   };
 
   return (
@@ -146,13 +169,12 @@ const addProduct = () => {
             paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}>
 
-          <View className='flex-row items-center justify-between px-4 py-3'>
+          <View className='flex-row items-center justify-between px-4 py-4'>
             <TouchableOpacity
-              onPress={() => {
-                navigate('..');
-              }}
-              className='pr-4'
+              onPress={() => router.back()}
+              className='pr-4 py-1'
               accessibilityLabel="Volver"
+              disabled={isLoading}
             >
               <Text className='text-white text-lg font-bold'>{'< Volver'}</Text>
             </TouchableOpacity>
@@ -161,8 +183,8 @@ const addProduct = () => {
           </View>
 
           {/* Form Container */}
-          <View className=' bg-gray-50 mt-4 h-full'>
-            <ScrollView className=' px-4 pt-6' showsVerticalScrollIndicator={false}>
+          <View className='bg-gray-50 h-full'>
+            <ScrollView className='px-4 pt-6' showsVerticalScrollIndicator={false}>
 
               {/* Product Name */}
               <View className='mb-4'>
@@ -173,6 +195,7 @@ const addProduct = () => {
                   value={formData.name}
                   onChangeText={(value) => handleInputChange('name', value)}
                   maxLength={100}
+                  editable={!isLoading}
                 />
                 <Text className='text-gray-500 text-xs mt-1'>{formData.name.length}/100</Text>
               </View>
@@ -189,6 +212,7 @@ const addProduct = () => {
                   numberOfLines={3}
                   textAlignVertical='top'
                   maxLength={500}
+                  editable={!isLoading}
                 />
                 <Text className='text-gray-500 text-xs mt-1'>{formData.description.length}/500</Text>
               </View>
@@ -203,6 +227,7 @@ const addProduct = () => {
                     value={formData.price}
                     onChangeText={(value) => handleInputChange('price', value)}
                     keyboardType='decimal-pad'
+                    editable={!isLoading}
                   />
                 </View>
                 <View className='flex-1'>
@@ -213,6 +238,7 @@ const addProduct = () => {
                     value={formData.stock}
                     onChangeText={(value) => handleInputChange('stock', value)}
                     keyboardType='numeric'
+                    editable={!isLoading}
                   />
                 </View>
               </View>
@@ -223,6 +249,7 @@ const addProduct = () => {
                 <TouchableOpacity
                   className='bg-white border border-gray-200 rounded-lg px-4 py-3'
                   onPress={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                  disabled={isLoading}
                 >
                   <Text className={selectedCategory ? 'text-gray-800' : 'text-gray-400'}>
                     {selectedCategory ? selectedCategory.name : 'Seleccionar categoría'}
@@ -253,6 +280,7 @@ const addProduct = () => {
                   value={formData.imageUrl}
                   onChangeText={(value) => handleInputChange('imageUrl', value)}
                   keyboardType='url'
+                  editable={!isLoading}
                 />
                 {formData.imageUrl ? (
                   <View className='mt-3'>
@@ -267,12 +295,22 @@ const addProduct = () => {
 
               {/* Submit Button */}
               <TouchableOpacity
-                className='bg-[#4A90E2] rounded-lg py-4 mb-8'
+                className='bg-[#4A90E2] rounded-lg py-4 mb-8 flex-row justify-center items-center'
                 onPress={handleSubmit}
+                disabled={isLoading}
               >
-                <Text className='text-white text-center text-lg font-bold'>
-                  Agregar producto
-                </Text>
+                {isLoading ? (
+                  <>
+                    <ActivityIndicator color="white" className='mr-2' />
+                    <Text className='text-white text-center text-lg font-bold'>
+                      Procesando...
+                    </Text>
+                  </>
+                ) : (
+                  <Text className='text-white text-center text-lg font-bold'>
+                    Agregar producto
+                  </Text>
+                )}
               </TouchableOpacity>
 
             </ScrollView>
@@ -283,4 +321,4 @@ const addProduct = () => {
   );
 };
 
-export default addProduct;
+export default AddProduct;
