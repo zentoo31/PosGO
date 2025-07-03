@@ -1,19 +1,43 @@
+import { RegisterDto } from '@/dto/registerDto';
+import { AuthService } from '@/services/auth.service';
 import Feather from '@expo/vector-icons/Feather';
-import { Link } from 'expo-router';
-import React from 'react';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 
 export default function register() {
+  const authService = new AuthService();
+  const[isLoading, setIsLoading] = useState(false);
+  const [registerData, setRegisterData] = useState<RegisterDto>({
+    email: '',
+    password: '',
+  });
+
+  const handleRegister = async () => {
+    setIsLoading(true);
+    try {
+      const response = await authService.register(registerData);
+      ToastAndroid.show(`Registro exitoso: ${response}`, ToastAndroid.SHORT);
+      router.push('/login');
+    } catch (error) {
+      ToastAndroid.show(`Error: ${error}`, ToastAndroid.SHORT);
+      console.error('Registration failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -41,7 +65,9 @@ export default function register() {
                     className="w-full h-full px-5"
                     placeholder="you@example.com"
                     keyboardType="email-address"
+                    placeholderTextColor={'gray'}
                     autoCapitalize="none"
+                    onChangeText={(text) => setRegisterData({ ...registerData, email: text })}
                   />
                 </View>
 
@@ -52,14 +78,17 @@ export default function register() {
                     className="w-full h-full px-5"
                     placeholder="**********"
                     secureTextEntry
+                    placeholderTextColor={'gray'}
+                    onChangeText={(text) => setRegisterData({ ...registerData, password: text })}
                   />
                 </View>
 
-                <Link href="/home" asChild>
-                  <Pressable className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5">
+                  <TouchableOpacity className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5"
+                    onPress={handleRegister}
+                    disabled={isLoading}
+                  >
                     <Text className="text-white">Regístrate</Text>
-                  </Pressable>
-                </Link>
+                  </TouchableOpacity>
               </View>
             </View>
           </View>
