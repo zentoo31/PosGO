@@ -40,7 +40,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "apiUrl": "http://10.0.2.2:3000"
+      "apiUrl": "https://posgo-nestjs.onrender.com"
     }
   }
 }
