@@ -1,4 +1,4 @@
-import { CreateProduct } from '@/dto/createProduct';
+import { CreateProduct } from '@/dto/createProductDto';
 import { Category } from '@/models/category';
 import { CategoryService } from '@/services/category.service';
 import { ProductService } from '@/services/product.service';
