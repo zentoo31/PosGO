@@ -1,6 +1,9 @@
+import { CreateProduct } from '@/dto/createProduct';
+import { Category } from '@/models/category';
+import { CategoryService } from '@/services/category.service';
 import { ProductService } from '@/services/product.service';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -16,30 +19,34 @@ import {
   View
 } from 'react-native';
 
-interface ProductData {
-  name: string;
-  description: string;
-  price: string;
-  category: number;
-  stock: string;
-  imageUrl: string;
-}
 
-const categories = [
-  { id: 1, name: 'Frutas' },
-  { id: 2, name: 'Lácteos' },
-  { id: 3, name: 'Panadería' },
-  { id: 4, name: 'Carnes' },
-  { id: 5, name: 'Otros' }
-];
 
 const AddProduct = () => {
-  const [formData, setFormData] = useState<ProductData>({
+
+  const categoryService = new CategoryService();
+
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await categoryService.getAllCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        Alert.alert('Error', 'No se pudieron cargar las categorías. Intente nuevamente.');
+      }
+    };
+
+    fetchCategories();
+    
+  }, []);
+  const [formData, setFormData] = useState<CreateProduct>({
     name: '',
     description: '',
-    price: '',
+    price: 0,
     category: 0,
-    stock: '',
+    stock: 0,
     imageUrl: ''
   });
 
@@ -48,7 +55,7 @@ const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
   const productService = new ProductService();
 
-  const handleInputChange = (field: keyof ProductData, value: string) => {
+  const handleInputChange = (field: keyof CreateProduct, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -108,18 +115,17 @@ const AddProduct = () => {
         price: Number(formData.price),
         category: formData.category, // Enviar como string o número según lo que espere tu backend
         stock: Number(formData.stock),
-        imageUrl: formData.imageUrl.trim() || undefined
+        imageUrl: formData.imageUrl?.trim() || undefined
       };
       console.log('Datos del producto a enviar:', productData);
-      
+
 
       // Llamada al servicio para crear el producto
       const createdProduct = await productService.createProduct({
-        id: 0, // El backend probablemente ignora esto o lo reemplaza
         name: productData.name,
         description: productData.description,
         price: productData.price,
-        category: productData.category, 
+        category: productData.category,
         stock: productData.stock,
         imageUrl: productData.imageUrl
       });
@@ -149,15 +155,17 @@ const AddProduct = () => {
     setFormData({
       name: '',
       description: '',
-      price: '',
+      price: 0,
       category: 0,
-      stock: '',
+      stock: 0,
       imageUrl: ''
     });
     setSelectedCategory(null);
   };
 
+
   return (
+
     <SafeAreaView className='flex-1 bg-[#16429E]'>
       <StatusBar backgroundColor="#16429E" barStyle="light-content" translucent />
       <KeyboardAvoidingView
@@ -224,7 +232,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='0.00'
-                    value={formData.price}
+                    value={formData.price.toString()}
                     onChangeText={(value) => handleInputChange('price', value)}
                     keyboardType='decimal-pad'
                     editable={!isLoading}
@@ -235,7 +243,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='10'
-                    value={formData.stock}
+                    value={formData.stock.toString()}
                     onChangeText={(value) => handleInputChange('stock', value)}
                     keyboardType='numeric'
                     editable={!isLoading}
