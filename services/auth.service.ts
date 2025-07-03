@@ -17,7 +17,7 @@ export class AuthService {
         });
 
         if (!response.ok) {
-            throw new Error("Registration failed");
+            throw new Error(response.statusText || "Registration failed");
         }
 
         return response.json();
@@ -33,7 +33,7 @@ export class AuthService {
         });
 
         if (!response.ok) {
-            throw new Error("Login failed");
+            throw new Error(response.statusText || "Login failed");
         }
 
         return response.json();

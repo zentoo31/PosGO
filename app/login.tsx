@@ -1,19 +1,58 @@
+import { LoginDto } from '@/dto/loginDto';
+import { AuthService } from '@/services/auth.service';
 import Feather from '@expo/vector-icons/Feather';
-import { Link } from 'expo-router';
-import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 
 const login = () => {
+  const authService = new AuthService();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginData, setLoginData] = useState<LoginDto>({
+    email: '',
+    password: '',
+  });
+
+  const storeTokens = async (accessToken: string, refreshToken: string) => {
+    try{
+      await AsyncStorage.multiSet([
+        ['@access_token', accessToken],
+        ['@refresh_token', refreshToken]
+      ])
+    }catch (error) {
+      console.error('Error storing tokens:', error);
+    }
+  }
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const response = await authService.login(loginData);
+      await storeTokens(response?.session?.access_token, response?.session.refresh_token);
+      ToastAndroid.show('Inicio de sesión exitoso', ToastAndroid.SHORT);
+      router.push('/home');
+    } catch (error) {
+      ToastAndroid.show(`Error: ${error}`, ToastAndroid.SHORT);
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -42,6 +81,7 @@ const login = () => {
                     placeholder="you@example.com"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    onChangeText={(text) => setLoginData({ ...loginData, email: text })}
                   />
                 </View>
                 <Text className="text-gray-700 font-bold">Contraseña</Text>
@@ -51,13 +91,16 @@ const login = () => {
                     className="w-full h-full px-5"
                     placeholder="**********"
                     secureTextEntry
+                    onChange={(text) => setLoginData({ ...loginData, password: text.nativeEvent.text })}
                   />
                 </View>
-                <Link href="/register" asChild>
-                  <Pressable className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5">
+                  <TouchableOpacity className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5"
+                    onPress={handleLogin}
+                    disabled={isLoading}
+                    activeOpacity={0.7}
+                  >
                     <Text className="text-white">Entrar</Text>
-                  </Pressable>
-                </Link>
+                  </TouchableOpacity>
               </View>
             </View>
           </View>

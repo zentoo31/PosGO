@@ -1,3 +1,4 @@
+import { CartItem } from '@/models/cartItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -13,13 +14,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-
-interface CartItem {
-  price: number;
-  nombre: string;
-  quantity?: number;
-  pic?: string;
-}
 
 const cart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
