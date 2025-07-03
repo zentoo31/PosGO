@@ -1,7 +1,10 @@
-import { Product } from "@/interfaces/product";
+import { CreateProduct } from "@/dto/createProduct";
+import { Product } from "@/models/product";
+import Constants from 'expo-constants';
 
 export class ProductService {
-    private baseUrl: string = 'http://10.0.2.2:3000/product'; 
+    private apiUrl: string = Constants.expoConfig?.extra?.apiUrl
+    private baseUrl: string = `${this.apiUrl}/product`;
 
     async getAllProducts(): Promise<Product[]> {
         try {
@@ -23,7 +26,7 @@ export class ProductService {
         }
     }
 
-    async createProduct(product: Product): Promise<Product> {
+    async createProduct(product: CreateProduct): Promise<Product> {
         try {
             const response = await fetch(`${this.baseUrl}`, {
                 method: 'POST',
