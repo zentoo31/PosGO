@@ -197,6 +197,7 @@ const AddProduct = () => {
                 <Text className='text-gray-700 font-semibold mb-2'>Nombre del producto</Text>
                 <TextInput
                   className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
+                  placeholderTextColor={'gray'}
                   placeholder='Ej: Manzana'
                   value={formData.name}
                   onChangeText={(value) => handleInputChange('name', value)}
@@ -212,6 +213,7 @@ const AddProduct = () => {
                 <TextInput
                   className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                   placeholder='Describe el producto...'
+                  placeholderTextColor={'gray'}
                   value={formData.description}
                   onChangeText={(value) => handleInputChange('description', value)}
                   multiline
@@ -230,6 +232,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='0.00'
+                    placeholderTextColor={'gray'}
                     value={formData.price.toString()}
                     onChangeText={(value) => handleInputChange('price', value)}
                     keyboardType='decimal-pad'
@@ -241,6 +244,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='10'
+                    placeholderTextColor={'gray'}
                     value={formData.stock.toString()}
                     onChangeText={(value) => handleInputChange('stock', value)}
                     keyboardType='numeric'
@@ -286,6 +290,7 @@ const AddProduct = () => {
                   value={formData.imageUrl}
                   onChangeText={(value) => handleInputChange('imageUrl', value)}
                   keyboardType='url'
+                  placeholderTextColor={'gray'}
                   editable={!isLoading}
                 />
                 {formData.imageUrl ? (
