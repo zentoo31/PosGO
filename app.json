@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.zentoo31.posgo"
     },
     "web": {
       "bundler": "metro",
@@ -40,7 +41,12 @@
       "typedRoutes": true
     },
     "extra": {
-      "apiUrl": "https://posgo-nestjs.onrender.com"
-    }
+      "apiUrl": "https://posgo-nestjs.onrender.com",
+      "router": {},
+      "eas": {
+        "projectId": "02a7c8d7-1b00-4914-98e5-136e656bd19a"
+      }
+    },
+    "owner": "zentoo31"
   }
 }
