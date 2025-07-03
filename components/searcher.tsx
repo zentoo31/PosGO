@@ -1,4 +1,4 @@
-import { Product } from '@/interfaces/product';
+import { Product } from '@/models/product';
 import { ProductService } from '@/services/product.service';
 import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,9 +7,9 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  Pressable,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -40,7 +40,10 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
   }
 
   useEffect(() => {
-    fetchProducts();
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
 
@@ -48,12 +51,12 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
     item.nombre.toLowerCase().includes(busqueda.toLowerCase())
   );
 
-  const addAddition = async (price: number, nombre: string) => {
+  const addAddition = async (price: number, nombre: string, pic: string) => {
     try {
       const current = await AsyncStorage.getItem('addition');
       const currentArray = current ? JSON.parse(current) : [];
 
-      const newItem = { price, nombre };
+      const newItem = { price, nombre, pic };
       const newArray = [...currentArray, newItem];
 
       await AsyncStorage.setItem('addition', JSON.stringify(newArray));
@@ -74,14 +77,14 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
           <Text className='text-lg font-bold'>S/. {item.price.toFixed(2)}</Text>
           <Text className='text-sm text-gray-500'>Stock: {item.stock}</Text>
         </View>
-        <Pressable className='bg-blue-500 rounded-md p-2 mt-2 flex-row items-center justify-center gap-2'
+        <TouchableOpacity className='bg-blue-500 rounded-md p-2 mt-2 flex-row items-center justify-center gap-2'
           onPress={() => {
-            addAddition(item.price, item.nombre);
+            addAddition(item.price, item.nombre, item.pic);
           }}
         >
           <Feather name="shopping-cart" size={20} color="white" className='ml-3' />
           <Text className='text-white text-center'>Agregar</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -106,7 +109,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
             nombre: item.name ?? '',
             pic: item.imageUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
             price: item.price ?? 0,
-            category: item.category ?? '',
+            category: item.category.name ?? '',
             stock: item.stock ?? 0,
           }))}
           keyExtractor={(item) => item.id}
