@@ -2,6 +2,7 @@ import { CreateProduct } from '@/dto/createProductDto';
 import { Category } from '@/models/category';
 import { CategoryService } from '@/services/category.service';
 import { ProductService } from '@/services/product.service';
+import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -115,8 +116,6 @@ const AddProduct = () => {
         stock: Number(formData.stock),
         imageUrl: formData.imageUrl?.trim() || undefined
       };
-      console.log('Datos del producto a enviar:', productData);
-
 
       // Llamada al servicio para crear el producto
       const createdProduct = await productService.createProduct({
@@ -182,7 +181,7 @@ const AddProduct = () => {
               accessibilityLabel="Volver"
               disabled={isLoading}
             >
-              <Text className='text-white text-lg font-bold'>{'< Volver'}</Text>
+              <Feather name='arrow-left' size={24} color='white' />
             </TouchableOpacity>
             <Text className='text-2xl font-bold text-white flex-1 text-center'>Agregar producto</Text>
             <View style={{ width: 60 }} />
