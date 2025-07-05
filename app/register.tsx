@@ -16,9 +16,9 @@ import {
   View
 } from 'react-native';
 
-export default function register() {
+export default function Register() {
   const authService = new AuthService();
-  const[isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [registerData, setRegisterData] = useState<RegisterDto>({
     email: '',
     password: '',
@@ -40,26 +40,29 @@ export default function register() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1"
+      className="flex-1 bg-white"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      keyboardVerticalOffset={Platform.select({ ios: 0, android: 100 })}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 justify-center items-center gap-5 px-4">
-            <View className="flex-row items-center gap-5">
+          <View className="flex-1 justify-center items-center px-4 pt-12 pb-24">
+            <View className="flex-row items-center gap-5 mb-4">
               <Feather name="shopping-bag" size={48} color="black" />
               <Text className="text-4xl font-bold">PosGo</Text>
             </View>
-            <Text>Bienvenido a PosGo! Regístrate con tu correo!</Text>
+            <Text>Bienvenido a PosGo! Regístrate con tu correo</Text>
+
             <View className="flex-col items-center gap-5 mt-10">
               <Text className="text-2xl font-extrabold">Registro</Text>
+
+              {/* Email */}
               <View className="gap-2">
                 <Text className="text-gray-700 font-bold">Correo</Text>
-                <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border-gray-500 border-[1px]">
+                <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border border-gray-400">
                   <Feather name="user" size={24} color="gray" />
                   <TextInput
                     className="w-full h-full px-5"
@@ -71,8 +74,9 @@ export default function register() {
                   />
                 </View>
 
-                <Text className="text-gray-700 font-bold">Contraseña</Text>
-                <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border-gray-500 border-[1px]">
+                {/* Password */}
+                <Text className="text-gray-700 font-bold mt-4">Contraseña</Text>
+                <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border border-gray-400">
                   <Feather name="lock" size={24} color="gray" />
                   <TextInput
                     className="w-full h-full px-5"
@@ -83,13 +87,21 @@ export default function register() {
                   />
                 </View>
 
-                  <TouchableOpacity className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-5"
-                    onPress={handleRegister}
-                    disabled={isLoading}
-                  >
-                    <Text className="text-white">Regístrate</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  className="bg-blue-500 w-80 h-12 rounded-md flex-row items-center justify-center mt-6"
+                  onPress={handleRegister}
+                  disabled={isLoading}
+                >
+                  <Text className="text-white font-bold">Regístrate</Text>
+                </TouchableOpacity>
               </View>
+            </View>
+
+            <View className="flex-row items-center gap-2 mt-10">
+              <Text className="text-gray-500">¿Ya tienes cuenta?</Text>
+              <TouchableOpacity onPress={() => router.push('/login')}>
+                <Text className="text-blue-500 font-semibold">Inicia sesión</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
