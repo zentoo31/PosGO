@@ -31,8 +31,9 @@ export default function Register() {
       ToastAndroid.show(`Registro exitoso: ${response}`, ToastAndroid.SHORT);
       router.push('/login');
     } catch (error) {
-      ToastAndroid.show(`Error: ${error}`, ToastAndroid.SHORT);
-      console.error('Registration failed:', error);
+      const errorMessage = (error instanceof Error && error.message) ? error.message : 'Ocurrió un error inesperado';
+      ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.SHORT);
+      console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
