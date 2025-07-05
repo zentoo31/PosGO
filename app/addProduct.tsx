@@ -112,7 +112,7 @@ const AddProduct = () => {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: Number(formData.price),
-        category: formData.category, // Enviar como string o número según lo que espere tu backend
+        category: formData.category, 
         stock: Number(formData.stock),
         imageUrl: formData.imageUrl?.trim() || undefined
       };
