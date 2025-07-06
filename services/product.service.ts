@@ -26,6 +26,26 @@ export class ProductService {
         }
     }
 
+    async getProductsByName(name: string): Promise<Product[]> {
+        try {
+            const response = await fetch(`${this.baseUrl}/search/${name}}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error fetching products by name: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to fetch products by name:', error);
+            throw error;
+        }
+    }
+
     async createProduct(product: CreateProduct): Promise<Product> {
         try {
             const response = await fetch(`${this.baseUrl}`, {
