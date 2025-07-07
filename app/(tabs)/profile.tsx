@@ -1,19 +1,23 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 const Profile = () => {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     pic_url: '',
     name: '',
@@ -28,6 +32,38 @@ const Profile = () => {
   const handleSubmit = () => {
     Alert.alert('Perfil actualizado', 'Tus datos han sido guardados.');
     // Aquí puedes hacer la petición a Supabase o tu API Nest
+  };
+
+  const confirmLogout = () => {
+    Alert.alert(
+      'Cerrar sesión',
+      '¿Estás seguro de que deseas cerrar sesión?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Sí, cerrar',
+          style: 'destructive',
+          onPress: handleLogout,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      setTimeout(() => {
+        router.dismissAll();
+        router.push('/');
+      }, 200);
+      Alert.alert('Sesión cerrada', 'Has cerrado sesión correctamente.');
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo cerrar sesión.');
+    }
   };
 
   return (
@@ -45,7 +81,6 @@ const Profile = () => {
 
         <View className='bg-[#F9FAFB] px-4 pt-6 flex-1'>
           <ScrollView className='flex-1'>
-            {/* Imagen */}
             <View className='items-center mb-4'>
               {form.pic_url ? (
                 <Image
@@ -88,10 +123,17 @@ const Profile = () => {
             />
 
             <TouchableOpacity
-              className='bg-blue-500 rounded-lg py-3 mb-10'
+              className='bg-blue-500 rounded-lg py-3 mb-4'
               onPress={handleSubmit}
             >
               <Text className='text-white text-center font-bold text-lg'>Guardar cambios</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className='bg-red-500 rounded-lg py-3 mb-10'
+              onPress={confirmLogout}
+            >
+              <Text className='text-white text-center font-bold text-lg'>Cerrar sesión</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
