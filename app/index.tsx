@@ -1,7 +1,7 @@
 import WelcomePage from "@/components/welcomePage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
+import { Redirect, useFocusEffect } from "expo-router";
+import React, { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 export default function Index() {
@@ -9,26 +9,29 @@ export default function Index() {
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
   const [hasAccessToken, setHasAccessToken] = useState(false);
 
-  useEffect(() => {
-    const checkAuthAndWelcome = async () => {
-      try {
-        // Verificar el welcome y el token de acceso
-        const [seen, accessToken] = await Promise.all([
-          AsyncStorage.getItem("hasSeenWelcome"),
-          AsyncStorage.getItem("@access_token")
-        ]);
-        
-        setHasSeenWelcome(!!seen);
-        setHasAccessToken(!!accessToken);
-      } catch (error) {
-        console.error("Error checking auth state:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkAuthAndWelcome = async () => {
+        setIsLoading(true);
+        try {
+          const [seen, accessToken] = await Promise.all([
+            AsyncStorage.getItem("hasSeenWelcome"),
+            AsyncStorage.getItem("@access_token")
+          ]);
 
-    checkAuthAndWelcome();
-  }, []);
+          setHasSeenWelcome(!!seen);
+          setHasAccessToken(!!accessToken);
+        } catch (error) {
+          console.error("Error checking auth state:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      checkAuthAndWelcome();
+    }, [])
+  );
+
 
   const handleWelcomeComplete = async (): Promise<void> => {
     try {
