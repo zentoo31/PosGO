@@ -122,7 +122,7 @@ export default function Login() {
             {/* Link a registro */}
             <View className="flex-row items-center gap-2 mt-10">
               <Text className="text-gray-500">¿No tienes cuenta?</Text>
-              <TouchableOpacity onPress={() => router.push('/register')}>
+              <TouchableOpacity onPress={() => router.replace('/register')}>
                 <Text className="text-blue-500 font-semibold">Regístrate</Text>
               </TouchableOpacity>
             </View>
