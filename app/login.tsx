@@ -43,11 +43,12 @@ export default function Login() {
       await storeTokens(response?.session?.access_token, response?.session.refresh_token);
       ToastAndroid.show('Inicio de sesión exitoso', ToastAndroid.SHORT);
       router.push('/home');
-    } catch (error) {
-      const errorMessage = (error instanceof Error && error.message) ? error.message : 'Ocurrió un error inesperado';
-      ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.SHORT);
-      console.error('Login failed:', error);
-    } finally {
+    }catch (error) {
+      ToastAndroid.show(
+        `${error}`,
+        ToastAndroid.SHORT
+      );
+    }finally {
       setIsLoading(false);
     }
   };
