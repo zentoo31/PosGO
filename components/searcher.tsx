@@ -31,7 +31,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
     }
   };
 
-  const buscarProductos = async (query: string) => {
+  const searchProducts = async (query: string) => {
     try {
       setLoading(true);
       if (query.trim() === '') {
@@ -42,7 +42,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
         setProducts(searched);
       }
     } catch (error) {
-      console.error('Error buscando productos:', error);
+      console.error('Error searching products:', error);
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      buscarProductos(busqueda);
+      searchProducts(busqueda);
     }, 500); // retraso de 500ms entre cada búsqueda
 
     return () => clearTimeout(timer);
