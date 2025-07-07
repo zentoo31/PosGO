@@ -28,7 +28,7 @@ export class ProductService {
 
     async getProductsByName(name: string): Promise<Product[]> {
         try {
-            const response = await fetch(`${this.baseUrl}/search/${name}}`, {
+            const response = await fetch(`${this.baseUrl}/search/${name}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
