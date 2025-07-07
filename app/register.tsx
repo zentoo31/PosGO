@@ -29,7 +29,7 @@ export default function Register() {
     try {
       await authService.register(registerData);
       ToastAndroid.show(`Registro exitoso!`, ToastAndroid.SHORT);
-      router.push('/login');
+      router.replace('/login');
     } catch (error) {
       ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
     } finally {
@@ -98,7 +98,7 @@ export default function Register() {
 
             <View className="flex-row items-center gap-2 mt-10">
               <Text className="text-gray-500">¿Ya tienes cuenta?</Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
+              <TouchableOpacity onPress={() => router.replace('/login')}>
                 <Text className="text-blue-500 font-semibold">Inicia sesión</Text>
               </TouchableOpacity>
             </View>
