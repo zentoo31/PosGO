@@ -1,6 +1,7 @@
 import { Product } from '@/models/product';
 import { ProductService } from '@/services/product.service';
 import Feather from '@expo/vector-icons/Feather';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
@@ -70,8 +71,8 @@ export default function SearcherEdit() {
                     <Text className="text-sm text-gray-500">Stock: {item.stock}</Text>
                 </View>
             </View>
-            <TouchableOpacity className="ml-4 bg-blue-500 rounded-md p-2 flex-row items-center justify-center" onPress={() => {/* Acción de editar */ }}>
-                <Feather name="edit-2" size={20} color="white" />
+            <TouchableOpacity className="ml-4 bg-blue-500 rounded-md p-2 flex-row items-center justify-center" onPress={() =>  router.push({pathname: '/edit/[id]', params:{id: item.id}})}>
+                <Feather name="edit-2" size={20} color="white" /> 
                 <Text className="text-white ml-2">Editar</Text>
             </TouchableOpacity>
         </View>
