@@ -27,13 +27,11 @@ export default function Register() {
   const handleRegister = async () => {
     setIsLoading(true);
     try {
-      const response = await authService.register(registerData);
-      ToastAndroid.show(`Registro exitoso: ${response}`, ToastAndroid.SHORT);
+      await authService.register(registerData);
+      ToastAndroid.show(`Registro exitoso!`, ToastAndroid.SHORT);
       router.push('/login');
     } catch (error) {
-      const errorMessage = (error instanceof Error && error.message) ? error.message : 'Ocurrió un error inesperado';
-      ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.SHORT);
-      console.error('Login failed:', error);
+      ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
     } finally {
       setIsLoading(false);
     }
