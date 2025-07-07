@@ -42,7 +42,7 @@ export default function Login() {
       const response = await authService.login(loginData);
       await storeTokens(response?.session?.access_token, response?.session.refresh_token);
       ToastAndroid.show('Inicio de sesión exitoso', ToastAndroid.SHORT);
-      router.push('/home');
+      router.push('/(tabs)');
     }catch (error) {
       ToastAndroid.show(
         `${error}`,
