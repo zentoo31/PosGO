@@ -7,7 +7,7 @@ export class AuthService {
     private apiUrl: string = Constants.expoConfig?.extra?.apiUrl;
     private baseUrl: string = `${this.apiUrl}/auth`;
 
-    async register(registerDto: RegisterDto): Promise<User> {
+    async register(registerDto: RegisterDto){
         const response = await fetch(`${this.baseUrl}/register`, {
             method: "POST",
             headers: {
@@ -33,7 +33,9 @@ export class AuthService {
         });
 
         if (!response.ok) {
-            throw new Error(response.statusText || "Login failed");
+            const errorData = await response.json().catch(() => null);
+            const errorMessage = (errorData && errorData.message) ? errorData.message : "Login failed";
+            throw new Error(errorMessage);
         }
 
         return response.json();

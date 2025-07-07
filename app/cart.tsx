@@ -1,4 +1,5 @@
 import { CartItem } from '@/models/cartItem';
+import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -139,7 +140,7 @@ const cart = () => {
               className='pr-4 py-1'
               accessibilityLabel="Volver"
             >
-              <Text className='text-white text-lg font-bold'>{'< Volver'}</Text>
+              <Feather name='arrow-left' size={24} color='white' />
             </TouchableOpacity>
             <Text className='text-2xl font-bold text-white flex-1 text-center'>Carrito</Text>
             <TouchableOpacity onPress={clearCart}>
@@ -166,7 +167,7 @@ const cart = () => {
                     </View>
                     <Text className='text-gray-600 mr-3'>x{item.quantity}</Text>
                     <TouchableOpacity onPress={() => removeItem(item.nombre)}>
-                      <Text className='text-red-500'>Eliminar</Text>
+                      <Feather name='trash-2' size={24} color='red' />
                     </TouchableOpacity>
                   </View>
                 ))}

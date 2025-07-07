@@ -2,6 +2,7 @@ import { CreateProduct } from '@/dto/createProductDto';
 import { Category } from '@/models/category';
 import { CategoryService } from '@/services/category.service';
 import { ProductService } from '@/services/product.service';
+import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -111,12 +112,10 @@ const AddProduct = () => {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: Number(formData.price),
-        category: formData.category, // Enviar como string o número según lo que espere tu backend
+        category: formData.category, 
         stock: Number(formData.stock),
         imageUrl: formData.imageUrl?.trim() || undefined
       };
-      console.log('Datos del producto a enviar:', productData);
-
 
       // Llamada al servicio para crear el producto
       const createdProduct = await productService.createProduct({
@@ -182,7 +181,7 @@ const AddProduct = () => {
               accessibilityLabel="Volver"
               disabled={isLoading}
             >
-              <Text className='text-white text-lg font-bold'>{'< Volver'}</Text>
+              <Feather name='arrow-left' size={24} color='white' />
             </TouchableOpacity>
             <Text className='text-2xl font-bold text-white flex-1 text-center'>Agregar producto</Text>
             <View style={{ width: 60 }} />
@@ -197,6 +196,7 @@ const AddProduct = () => {
                 <Text className='text-gray-700 font-semibold mb-2'>Nombre del producto</Text>
                 <TextInput
                   className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
+                  placeholderTextColor={'gray'}
                   placeholder='Ej: Manzana'
                   value={formData.name}
                   onChangeText={(value) => handleInputChange('name', value)}
@@ -212,6 +212,7 @@ const AddProduct = () => {
                 <TextInput
                   className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                   placeholder='Describe el producto...'
+                  placeholderTextColor={'gray'}
                   value={formData.description}
                   onChangeText={(value) => handleInputChange('description', value)}
                   multiline
@@ -230,6 +231,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='0.00'
+                    placeholderTextColor={'gray'}
                     value={formData.price.toString()}
                     onChangeText={(value) => handleInputChange('price', value)}
                     keyboardType='decimal-pad'
@@ -241,6 +243,7 @@ const AddProduct = () => {
                   <TextInput
                     className='bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-800'
                     placeholder='10'
+                    placeholderTextColor={'gray'}
                     value={formData.stock.toString()}
                     onChangeText={(value) => handleInputChange('stock', value)}
                     keyboardType='numeric'
@@ -286,6 +289,7 @@ const AddProduct = () => {
                   value={formData.imageUrl}
                   onChangeText={(value) => handleInputChange('imageUrl', value)}
                   keyboardType='url'
+                  placeholderTextColor={'gray'}
                   editable={!isLoading}
                 />
                 {formData.imageUrl ? (
