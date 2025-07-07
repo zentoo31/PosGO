@@ -33,7 +33,9 @@ export class AuthService {
         });
 
         if (!response.ok) {
-            throw new Error(response.statusText || "Login failed");
+            const errorData = await response.json().catch(() => null);
+            const errorMessage = (errorData && errorData.message) ? errorData.message : "Login failed";
+            throw new Error(errorMessage);
         }
 
         return response.json();
