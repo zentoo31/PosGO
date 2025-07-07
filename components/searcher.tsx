@@ -75,12 +75,12 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
     }
   };
 
-  const renderItem = ({ item }: { item: { id: string; nombre: string, pic: string; price: number, category: string, stock: number } }) => (
+  const renderItem = ({ item }: { item: { id: string; nombre: string, pic: string; price: number, category: {name: string, color: string}, stock: number } }) => (
     <View className='flex-1 m-1 flex-col border-[0.5px] border-gray-300 rounded-lg'>
       <Image source={{ uri: item.pic }} className='w-full h-32' />
       <View className='p-2 flex-1'>
         <Text className="text-base mt-2">{item.nombre}</Text>
-        <Text className='text-gray-300 text-sm'>{item.category}</Text>
+        <Text style={{ color: item.category.color }} className="text-sm">{item.category.name}</Text>
         <View className='flex-row justify-between items-center mt-2'>
           <Text className='text-lg font-bold'>S/. {item.price.toFixed(2)}</Text>
           <Text className='text-sm text-gray-500'>Stock: {item.stock}</Text>
@@ -118,7 +118,10 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
             nombre: item.name ?? '',
             pic: item.imageUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
             price: item.price ?? 0,
-            category: item.category.name ?? '',
+            category: {
+              name: item.category?.name ?? 'Sin categoría',
+              color: item.category?.color ?? '#000000',
+            },
             stock: item.stock ?? 0,
           }))}
           keyExtractor={(item) => item.id}
