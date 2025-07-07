@@ -54,7 +54,7 @@ export default function Index() {
 
   // Si ya vió el welcome, redirigir según tenga token o no
   return hasAccessToken ? (
-    <Redirect href="/home" />
+    <Redirect href="/(tabs)" />
   ) : (
     <Redirect href="/login" />
   );
