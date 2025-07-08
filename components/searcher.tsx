@@ -100,7 +100,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
   return (
     <View className="p-4 bg-white rounded-lg flex-1">
       <TextInput
-        className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300"
+        className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300 text-gray-900"
         placeholder="Buscar productos..."
         placeholderTextColor={'gray'}
         value={busqueda}
