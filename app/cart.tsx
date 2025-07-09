@@ -1,3 +1,4 @@
+import Boleta from '@/components/boleta';
 import { CartItem } from '@/models/cartItem';
 import Feather from '@expo/vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,14 +33,14 @@ const cart = () => {
     try {
       const current = await AsyncStorage.getItem('addition');
       const currentArray = current ? JSON.parse(current) : [];
-      
+
       // Agrupar items por nombre y contar cantidades
       const groupedItems = currentArray.reduce((acc: CartItem[], item: CartItem) => {
         const existingItem = acc.find(i => i.nombre === item.nombre);
         if (existingItem) {
           existingItem.quantity = (existingItem.quantity || 1) + 1;
         } else {
-          acc.push({...item, quantity: 1});
+          acc.push({ ...item, quantity: 1 });
         }
         return acc;
       }, []);
@@ -87,10 +88,10 @@ const cart = () => {
     try {
       const current = await AsyncStorage.getItem('addition');
       const currentArray = current ? JSON.parse(current) : [];
-      
+
       // Filtrar todos los items con este nombre
       const newArray = currentArray.filter((item: CartItem) => item.nombre !== nombre);
-      
+
       await AsyncStorage.setItem('addition', JSON.stringify(newArray));
       loadCartItems(); // Recargar los items
     } catch (error) {
@@ -148,7 +149,9 @@ const cart = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView className='h-full bg-white p-4'>
+          <ScrollView className='bg-white px-4 pt-4'
+            contentContainerStyle={{ paddingBottom: 80 }}
+            showsVerticalScrollIndicator={false}>
             {cartItems.length === 0 ? (
               <View className='flex-1 items-center justify-center py-10'>
                 <Text className='text-gray-500 text-lg'>El carrito está vacío</Text>
@@ -157,7 +160,7 @@ const cart = () => {
               <>
                 {cartItems.map((item, index) => (
                   <View key={index} className='flex-row items-center py-3 border-b border-gray-200'>
-                    <Image 
+                    <Image
                       source={{ uri: item.pic }} // Reemplaza con tu imagen
                       className='w-12 h-12 rounded-md mr-3'
                     />
@@ -177,7 +180,7 @@ const cart = () => {
                     <Text className='text-lg font-bold'>Total:</Text>
                     <Text className='text-lg font-bold'>S/.{total.toFixed(2)}</Text>
                   </View>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     className='bg-[#16429E] py-3 rounded-lg items-center'
                     onPress={handlePurchase}
                   >
@@ -185,6 +188,9 @@ const cart = () => {
                   </TouchableOpacity>
                 </View>
               </>
+            )}
+            {cartItems.length > 0 && (
+              <Boleta cartItems={cartItems} total={total} />
             )}
           </ScrollView>
         </View>

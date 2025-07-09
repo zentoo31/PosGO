@@ -46,6 +46,26 @@ export class ProductService {
         }
     }
 
+    async getProductById(id: string): Promise<Product> {
+        try {
+            const response = await fetch(`${this.baseUrl}/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error fetching product by ID: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to fetch product by ID:', error);
+            throw error;
+        }
+    }
+
     async createProduct(product: CreateProduct): Promise<Product> {
         try {
             const response = await fetch(`${this.baseUrl}`, {
@@ -63,6 +83,27 @@ export class ProductService {
             return await response.json();
         } catch (error) {
             console.error('Failed to create product:', error);
+            throw error;
+        }
+    }
+
+    async updateProduct(id: string, product: CreateProduct): Promise<Product> {
+        try {
+            const response = await fetch(`${this.baseUrl}/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error updating product: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to update product:', error);
             throw error;
         }
     }

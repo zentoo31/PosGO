@@ -10,7 +10,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 
 export default function SearcherEdit() {
@@ -81,12 +81,13 @@ export default function SearcherEdit() {
     return (
         <View className="p-4 bg-white rounded-lg flex-1">
             <TextInput
-                className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300"
+                className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300 text-gray-900"
                 placeholder="Buscar productos..."
                 placeholderTextColor={'gray'}
                 value={busqueda}
                 onChangeText={setBusqueda}
             />
+
 
             {loading ? (
                 <View className="flex-1 justify-center items-center">
@@ -101,7 +102,7 @@ export default function SearcherEdit() {
                         price: item.price ?? 0,
                         category: {
                             name: item.category?.name ?? 'Sin categoría',
-                            color: item.category?.color ?? '#000000',
+                            color:'#000000',
                         },
                         stock: item.stock ?? 0,
                     }))}

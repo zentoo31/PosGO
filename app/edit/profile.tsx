@@ -97,6 +97,7 @@ const Profile = () => {
             <TextInput
               className='bg-white px-4 py-3 rounded-lg border border-gray-300 mb-4 text-gray-900'
               placeholder="URL de imagen"
+              placeholderTextColor={'gray'}
               value={form.pic_url}
               onChangeText={text => handleChange('pic_url', text)}
             />
@@ -104,6 +105,7 @@ const Profile = () => {
             <TextInput
               className='bg-white px-4 py-3 rounded-lg border border-gray-300 mb-4 text-gray-900'
               placeholder="Nombre"
+              placeholderTextColor={'gray'}
               value={form.name}
               onChangeText={text => handleChange('name', text)}
             />
@@ -111,6 +113,7 @@ const Profile = () => {
             <TextInput
               className='bg-white px-4 py-3 rounded-lg border border-gray-300 mb-4 text-gray-900'
               placeholder="Ciudad"
+              placeholderTextColor={'gray'}
               value={form.city}
               onChangeText={text => handleChange('city', text)}
             />
@@ -118,6 +121,7 @@ const Profile = () => {
             <TextInput
               className='bg-white px-4 py-3 rounded-lg border border-gray-300 mb-6 text-gray-900'
               placeholder="País"
+              placeholderTextColor={'gray'}
               value={form.country}
               onChangeText={text => handleChange('country', text)}
             />

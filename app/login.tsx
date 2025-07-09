@@ -82,7 +82,7 @@ export default function Login() {
                 <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border border-gray-500">
                   <Feather name="user" size={24} color="gray" />
                   <TextInput
-                    className="w-full h-full px-5"
+                    className="w-full h-full px-5 text-gray-900"
                     placeholder="you@example.com"
                     keyboardType="email-address"
                     placeholderTextColor="gray"
@@ -97,7 +97,7 @@ export default function Login() {
                 <View className="bg-gray-50 w-80 h-12 rounded-md flex-row items-center px-5 border border-gray-500">
                   <Feather name="lock" size={24} color="gray" />
                   <TextInput
-                    className="w-full h-full px-5"
+                    className="w-full h-full px-5 text-gray-900"
                     placeholder="**********"
                     secureTextEntry
                     placeholderTextColor="gray"

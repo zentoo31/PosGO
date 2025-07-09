@@ -75,11 +75,17 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
     }
   };
 
-  const renderItem = ({ item }: { item: { id: string; nombre: string, pic: string; price: number, category: {name: string, color: string}, stock: number } }) => (
+  const renderItem = ({ item }: { item: { id: string; nombre: string, pic: string; price: number, category: { name: string, color: string }, stock: number } }) => (
     <View className='flex-1 m-1 flex-col border-[0.5px] border-gray-300 rounded-lg'>
       <Image source={{ uri: item.pic }} className='w-full h-32' />
       <View className='p-2 flex-1'>
-        <Text className="text-base mt-2">{item.nombre}</Text>
+        <Text
+          className="text-base mt-2"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {item.nombre}
+        </Text>
         <Text style={{ color: item.category.color }} className="text-sm">{item.category.name}</Text>
         <View className='flex-row justify-between items-center mt-2'>
           <Text className='text-lg font-bold'>S/. {item.price.toFixed(2)}</Text>
@@ -100,7 +106,7 @@ export default function Searcher({ onAddItem }: { onAddItem: () => void }) {
   return (
     <View className="p-4 bg-white rounded-lg flex-1">
       <TextInput
-        className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300"
+        className="px-4 py-3 rounded-lg mb-4 border-[0.5px] border-gray-300 text-gray-900"
         placeholder="Buscar productos..."
         placeholderTextColor={'gray'}
         value={busqueda}
