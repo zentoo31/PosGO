@@ -1,8 +1,11 @@
 import { GeminiService } from '@/services/gemini.service';
 import { ProductService } from '@/services/product.service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   KeyboardAvoidingView,
   Platform,
@@ -10,6 +13,7 @@ import {
   ScrollView,
   StatusBar,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 import Markdown from 'react-native-markdown-display';
@@ -35,6 +39,16 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      router.replace('/login');
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo cerrar sesión.');
+    }
+  };
+
 
   return (
     <SafeAreaView className='flex-1 bg-[#16429E]'>
@@ -66,6 +80,19 @@ const Dashboard = () => {
               <Button title="Generar resumen" onPress={handleGenerateText} />
             </View>
           </View>
+
+          <TouchableOpacity
+            onPress={handleLogout}
+            style={{
+              backgroundColor: '#E3342F',
+              padding: 12,
+              borderRadius: 8,
+              alignItems: 'center',
+              marginTop: 50,
+            }}
+          >
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Cerrar Sesión</Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
